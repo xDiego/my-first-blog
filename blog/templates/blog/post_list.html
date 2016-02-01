@@ -3,7 +3,15 @@
   <title>Bloggg</title>
 </head>
 <body>
-    <p>Testing the website</p>
-    <a href="google.com">google.com</a>
+  <div>
+    <h1>Django Template Practice</h1>
+
+    {% for post in posts%}
+	<p>published: {{post.published_date}}</p>
+        <h2>{{post}}</h2>
+        <p>{{post.text}}</p>
+	<p>created on: {{post.created_date|linebreaks}}</p>
+    {% endfor %}
+  </div>
 </body>
 </html>
