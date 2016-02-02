@@ -1,12 +1,21 @@
 <html>
   <head>
     <title>Log In</title>
+    <style>
+      .label {
+         padding: 20px 23px 20px 0px;
+      }
+    </style>
   </head>
 <body>
   <h1>Please Log In</h1>
-  <form action="/your-name/" method="post">
+  <form action="" method="post">
     {% csrf_token %}
-    {{ form }}
+    <span class="label">{{ form.your_name.label }}</span>
+    {{ form.your_name }}
+    <br />
+    {{ form.password.label }}
+    {{ form.password }}
     <input type="submit" value="Submit" />
   </form>
 

@@ -5,3 +5,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'text',)
+
+class LoginForm(forms.Form):
+    your_name = forms.CharField(label='Name', max_length=100)
+    password = forms.CharField(label='Password', max_length=30)

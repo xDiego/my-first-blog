@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, LoginForm
 
 # Create your views here.
 def post_list(request):
@@ -46,3 +46,7 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
             
     return render(request, 'blog/post_edit.html', {'form': form})
+
+def login(request):
+    form = LoginForm()
+    return render(request, 'blog/login.html', {'form': form})
