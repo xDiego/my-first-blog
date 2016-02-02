@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>Log In</title>
+  </head>
+<body>
+  <h1>Please Log In</h1>
+  <form action="/your-name/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+  </form>
+
+</body>
+</html>
