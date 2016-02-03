@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('blog.urls')),
+    url(r'accounts/login/$', views.login),
+    url(r'accounts/logout/$', views.logout, {'next_page': '/'}),
+    #The above URL is deprecated in django-1.10, make sure to revise it
 ]

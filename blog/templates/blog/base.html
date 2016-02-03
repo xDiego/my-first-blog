@@ -13,15 +13,19 @@
   
   <div class="page-header">
     {% if user.is_authenticated %}
-    <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+    <a href="{% url 'post_new' %}" class="top-menu" data-toggle="tooltip" title="New Post"><span class="glyphicon glyphicon-file"></span></a>
+    <a href="{% url 'post_draft_list' %}" class="top-menu" data-toggle="tooltip" title="Drafts"><span class="glyphicon glyphicon-edit"></span></a>
+    <p class="top-menu"><strong>Hello {{ user.username }}</strong><small>(<a href="{% url 'django.contrib.auth.views.logout' %}" data-toggle="tooltip" title="logout">Log out</a>)</small></p>
+    {% else %}
+    <a href="{% url 'django.contrib.auth.views.login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
     {% endif %}
-    <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
+
     <h1><a href="/">Django Template Practice</a></h1>
   </div>
 
   <div class="content container">
     <div class="row">
-      <div class="col-mg-12">
+      <div class="col-md-8">
 	{% block content %}
 	{% endblock %}
       </div>

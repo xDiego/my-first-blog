@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
 from .models import Post
 from .forms import PostForm, LoginForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def post_list(request):
@@ -14,7 +15,7 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post': post})
     
-
+@login_required
 def post_new(request):
 
     if request.method == 'POST':
@@ -28,7 +29,7 @@ def post_new(request):
         form = PostForm()
             
     return render(request, 'blog/post_edit.html', {'form': form})
-
+@login_required
 def post_edit(request, pk):
 
     post = get_object_or_404(Post, pk=pk)
@@ -46,12 +47,14 @@ def post_edit(request, pk):
             
     return render(request, 'blog/post_edit.html', {'form': form})
 
+@login_required
 def post_draft_list(request):
     """Will post drafted posts
     """
     posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
     return render(request, 'blog/post_draft_list.html', {'posts':posts})
 
+@login_required
 def post_publish(request, pk):
     """View to publish drafted posts
     """
@@ -59,8 +62,16 @@ def post_publish(request, pk):
     post.publish()
     return redirect('blog.views.post_detail', pk=pk)
 
-#This login view is just for my own testing purposes
-#Also, don't forget to mark the other parts related to this
-def login(request):
-    form = LoginForm()
-    return render(request, 'blog/login.html', {'form': form})
+@login_required
+def post_remove(request, pk):
+    """Remove a post
+    """
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('blog.views.post_list')
+
+# #This login view is just for my own testing purposes
+# #Also, don't forget to mark the other parts related to this
+# def login(request):
+#     form = LoginForm()
+#     return render(request, 'blog/login.html', {'form': form})
