@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
-from .models import Post
-from .forms import PostForm, LoginForm
+from .models import Post, Comment
+from .forms import PostForm, LoginForm, RegisterForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 # Create your views here.
 def post_list(request):
@@ -70,8 +71,44 @@ def post_remove(request, pk):
     post.delete()
     return redirect('blog.views.post_list')
 
-# #This login view is just for my own testing purposes
-# #Also, don't forget to mark the other parts related to this
-# def login(request):
-#     form = LoginForm()
-#     return render(request, 'blog/login.html', {'form': form})
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            #TODO:
+            #need to add a user profile with the user
+            return redirect('blog.views.post_list')
+    else:
+        form = RegisterForm()
+    return render(request, "blog/register.html", {'form':form})
+
+def add_comment_to_post(request, pk):
+    """Enable Users to add comments to the post
+    """
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post 
+            comment.save()
+            return redirect('blog.views.post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
+        
+    return render(request, 'blog/add_comment_to_post.html',{'form':form})
+
+@login_required
+def comment_approve(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.approve()
+    return redirect('blog.views.post_detail', pk=comment.post.pk)
+
+
+@login_required
+def comment_remove(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post_pk = comment.post.pk
+    comment.delete()
+    return redirect('blog.views.post_detail', pk=post_pk)
