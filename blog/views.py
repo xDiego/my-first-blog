@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
-from .models import Post, Comment
-from .forms import PostForm, LoginForm, RegisterForm, CommentForm
+from .models import Post, Comment, UserProfile
+from .forms import PostForm, CommentForm, RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -72,31 +72,41 @@ def post_remove(request, pk):
     return redirect('blog.views.post_list')
 
 def register(request):
+
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
-            #TODO:
-            #need to add a user profile with the user
-            return redirect('blog.views.post_list')
+            ## TODO:
+            ## 1) Redirect to profile settings
+            ## 2) Do Email Authentication that way We don't let
+            ## users do much without authentication. Otherwise
+            ## bots could just flood the system.
+            ## 3) After user creation, log them in automatically.
+            name, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
+            newuser = User.objects.create_user(name, password=password)
+            newuser.save()
+            return redirect('/')
     else:
         form = RegisterForm()
-    return render(request, "blog/register.html", {'form':form})
+        print('GET')
+    return render(request, 'blog/register.html', {'form':form})
 
 def add_comment_to_post(request, pk):
     """Enable Users to add comments to the post
     """
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
+        print('inside post')
         form = CommentForm(request.POST)
         if form.is_valid():
+            print('form is valid')
             comment = form.save(commit=False)
             comment.post = post 
             comment.save()
             return redirect('blog.views.post_detail', pk=post.pk)
     else:
         form = CommentForm()
-        
+    print('GET')
     return render(request, 'blog/add_comment_to_post.html',{'form':form})
 
 @login_required

@@ -1,7 +1,37 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
+class UserProfile(models.Model):
+    # Relationships
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        related_name="profile"
+    )
+
+    # Attributes - Mandatory
+    num_blogs = models.IntegerField(default=0)
+
+    # Custom Property
+    def username(self):
+        return self.user.username
+
+    # Methods
+
+    def __str__(self):
+        return self.user.username
+
+#signaling
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_profile_for_new_user(sender, created, instance, **kwargs):
+    if created:
+        profile = UserProfile(user=instance)
+        profile.save()
+
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=200)
@@ -22,12 +52,16 @@ class Post(models.Model):
         return self.title
 
 class Comment(models.Model):
+    # Relationship
     post = models.ForeignKey('blog.Post', related_name='comments')
+
+    # Attributes
     author = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateField(default=timezone.now)
     approved_comment = models.BooleanField(default=False)
 
+    # Method
     def approve(self):
         """approve the comment
         """
