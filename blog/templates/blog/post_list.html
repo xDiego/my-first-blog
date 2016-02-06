@@ -2,9 +2,9 @@
 
 {% block content %}
   {% for post in posts%}
-      <!--{% if post.published_date %} -->
           <div class="post">  
 	    <h1><a href="{% url 'post_detail' pk=post.pk %}">{{post}}</a></h1>
+	    <p>By {{ post.author }}</p>
 	    <div class="date">
 	      <p>published: {{post.published_date}}</p>
 	    </div>
@@ -12,6 +12,5 @@
 	    <a href="{% url 'blog.views.post_detail' pk=post.pk%}">Comments: {{ post.approved_comments.count }}</a>
 	    <hr>
 	  </div>
-<!--      {% endif %} -->
   {% endfor %}
 {% endblock %}

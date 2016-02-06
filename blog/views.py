@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
@@ -7,9 +8,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 # Create your views here.
+def main_page(request):
+    return render(request, 'blog/index.html')
+
 def post_list(request):
-#    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    posts = Post.objects.order_by('-published_date')
+    #query db for users post only
+#    print(request.user)
+    posts = Post.objects.filter(author=request.user).order_by('-published_date')
+#    posts = Post.objects.order_by('-published_date')
     return render(request, 'blog/post_list.html', {'posts':posts})
 
 def post_detail(request, pk):
@@ -85,7 +91,7 @@ def register(request):
             name, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
             newuser = User.objects.create_user(name, password=password)
             newuser.save()
-            return redirect('/')
+            return redirect('blog.views.post_list')
     else:
         form = RegisterForm()
         print('GET')

@@ -8,10 +8,7 @@
 
 <form method="POST" action="{% url 'blog.views.register' %}">
 {% csrf_token %}
-  {{ form.username.label }}
-  {{ form.username }}
-  {{ form.password.label }}
-  {{ form.password }}
+ {{ form.as_p }}
 <input type="submit" value="Submit Form" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
