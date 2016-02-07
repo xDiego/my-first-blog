@@ -15,6 +15,8 @@ class UserProfile(models.Model):
 
     # Attributes - Mandatory
     num_blogs = models.IntegerField(default=0)
+    activation_key = models.CharField(max_length=40, default="empty")
+    key_expires = models.DateTimeField(null=True)    
 
     # Custom Property
     def username(self):
@@ -32,8 +34,18 @@ def create_profile_for_new_user(sender, created, instance, **kwargs):
         profile = UserProfile(user=instance)
         profile.save()
 
+class Blog(models.Model):
+    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    num_posts = models.IntegerField(default=0)
+
+    def __str__(self):
+        return ''.join([self.name, '(', str(self.owner), ')'])
+
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(

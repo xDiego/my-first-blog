@@ -1,21 +1,53 @@
-
+import hashlib
+import random
 from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
-from .models import Post, Comment, UserProfile
-from .forms import PostForm, CommentForm, RegisterForm
+from .models import Post, Comment, UserProfile, Blog
+from .forms import PostForm, CommentForm, RegisterForm, UserSettingsForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
+
 
 # Create your views here.
 def main_page(request):
     return render(request, 'blog/index.html')
 
+def settings_page(request):
+    # check if user is authenticated
+    if request.user.is_authenticated and request.method == "GET":
+        # Query DB for UserProfile settings
+#        user = User.objects.filter(username=request.user)[0]
+        user = request.user  ## this is a replacement for the above code
+                             ## don't have to fetch user from DB
+        form = UserSettingsForm(
+            initial={
+                'first_name':user.first_name,
+                'last_name':user.last_name,
+                'email':user.email,
+                'last_login':user.last_login,
+                'date_joined':user.date_joined
+            }
+        )
+        return render(request, 'blog/user_settings.html', {'form':form})
+
+    else: #POST method
+
+        form = UserSettingsForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()  #update user profile
+ 
+            return render(request, 'blog/user_settings.html', {'form':form}) 
+
+    return redirect('django.contrib.auth.views.login')
+        
+
 def post_list(request):
     #query db for users post only
 #    print(request.user)
     posts = Post.objects.filter(author=request.user).order_by('-published_date')
-#    posts = Post.objects.order_by('-published_date')
+
     return render(request, 'blog/post_list.html', {'posts':posts})
 
 def post_detail(request, pk):
@@ -78,7 +110,6 @@ def post_remove(request, pk):
     return redirect('blog.views.post_list')
 
 def register(request):
-
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -90,11 +121,63 @@ def register(request):
             ## 3) After user creation, log them in automatically.
             name, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
             newuser = User.objects.create_user(name, password=password)
+            newuser.email = form.cleaned_data.get('email')
             newuser.save()
+
+            uname = request.POST['username']
+            pw = request.POST['password']
+            uu = authenticate(username=uname, password=pw)
+            
+            if uu:
+                if uu.is_active:
+                    login(request, uu)
+                    redirect('blog.views.post_list')
+            
+
             return redirect('blog.views.post_list')
     else:
-        form = RegisterForm()
-        print('GET')
+        # check if person is authenticated, if so redirect them to 
+        # Post_List
+        if request.user.is_authenticated():
+            return redirect('blog.views.post_list')
+        else:
+            form = RegisterForm()
+    return render(request, 'blog/register.html', {'form':form})
+
+def register2(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            ## TODO:
+            ## 1) Redirect to profile settings
+            ## 2) Do Email Authentication that way We don't let
+            ## users do much without authentication. Otherwise
+            ## bots could just flood the system.
+            ## 3) After user creation, log them in automatically.
+            kwargs = {}
+            kwargs['username'] = form.cleaned_data.get('username')
+            kwargs['password'] = form.cleaned_data.get('password')
+            kwargs['email']    = form.cleaned_date.get('email')
+            
+            # creating authentication key
+            salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+            if isinstance(kwargs['email'], unicode):
+                email = email.encode('utf-8')
+            kwargs['activation_key'] = hashlib.sha1(salt+email).hexdigest()
+            kwargs['email_subject'] = "Authenticate you account"
+            
+
+            form.sendEmail(kwargs)
+            form.save(kwargs)
+
+            return redirect('blog.views.post_list')
+    else:
+        # check if person is authenticated, if so redirect them to 
+        # Post_List
+        if request.user.is_authenticated():
+            return redirect('blog.views.post_list')
+        else:
+            form = RegisterForm()
     return render(request, 'blog/register.html', {'form':form})
 
 def add_comment_to_post(request, pk):
@@ -102,10 +185,8 @@ def add_comment_to_post(request, pk):
     """
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
-        print('inside post')
         form = CommentForm(request.POST)
         if form.is_valid():
-            print('form is valid')
             comment = form.save(commit=False)
             comment.post = post 
             comment.save()

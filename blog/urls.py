@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^comment/(?P<pk>[0-9]+)/approve/$', views.comment_approve, name='comment_approve'),
     url(r'^comment/(?P<pk>[0-9]+)/remove/$', views.comment_remove, name='comment_remove'),
     url(r'^register/$', views.register, name='register'),
+    url(r'^user_settings/$', views.settings_page, name='settings_page'),
     #url for the our login test page, remove if needed
     #url(r'^login/$', views.login, name='login'),
 ]
