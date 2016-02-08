@@ -8,15 +8,17 @@ from .forms import PostForm, CommentForm, RegisterForm, UserSettingsForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-
+from django import forms
 
 # Create your views here.
 def main_page(request):
     return render(request, 'blog/index.html')
 
+@login_required
 def settings_page(request):
     # check if user is authenticated
-    if request.user.is_authenticated and request.method == "GET":
+    if request.user.is_authenticated() and request.method == "GET":
+        print('user authenticated')
         # Query DB for UserProfile settings
 #        user = User.objects.filter(username=request.user)[0]
         user = request.user  ## this is a replacement for the above code
@@ -32,8 +34,7 @@ def settings_page(request):
         )
         return render(request, 'blog/user_settings.html', {'form':form})
 
-    else: #POST method
-
+    elif request.method == "POST": #POST method
         form = UserSettingsForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()  #update user profile
@@ -41,11 +42,20 @@ def settings_page(request):
             return render(request, 'blog/user_settings.html', {'form':form}) 
 
     return redirect('django.contrib.auth.views.login')
-        
+
+def post_list1(request, pk):
+#    posts = Post.objects.filter(blog__pk=pk, author=request.user).order_by('-published_date')
+    posts = Post.objects.filter(blog__pk=pk).order_by('-published_date')
+    print('post_list1')
+    print(posts)
+    return render(request, 'blog/post_list.html', {'posts':posts})
 
 def post_list(request):
-    #query db for users post only
-#    print(request.user)
+    ## TODO:
+    ## Figure out how to print Posts for the Blog selected
+    ## and not all the Post from every blog
+
+    ## query db for users post only
     posts = Post.objects.filter(author=request.user).order_by('-published_date')
 
     return render(request, 'blog/post_list.html', {'posts':posts})
@@ -53,7 +63,7 @@ def post_list(request):
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post': post})
-    
+
 @login_required
 def post_new(request):
 
@@ -65,9 +75,13 @@ def post_new(request):
             post.save()
             return redirect('post_detail', pk=post.pk)
     else:
+        # Limit the Blog options to users blog
+        q_set = Blog.objects.filter(owner__user = request.user)
+        PostForm.base_fields['blog'] = forms.ModelChoiceField(queryset=q_set, empty_label='Choose a Blog')
         form = PostForm()
             
     return render(request, 'blog/post_edit.html', {'form': form})
+
 @login_required
 def post_edit(request, pk):
 
@@ -180,6 +194,7 @@ def register2(request):
             form = RegisterForm()
     return render(request, 'blog/register.html', {'form':form})
 
+@login_required
 def add_comment_to_post(request, pk):
     """Enable Users to add comments to the post
     """
@@ -196,6 +211,9 @@ def add_comment_to_post(request, pk):
     print('GET')
     return render(request, 'blog/add_comment_to_post.html',{'form':form})
 
+## TODO
+## - Edit the comment_approve/remove so that only the owner
+##   of the blog can approve or remove.
 @login_required
 def comment_approve(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
@@ -209,3 +227,7 @@ def comment_remove(request, pk):
     post_pk = comment.post.pk
     comment.delete()
     return redirect('blog.views.post_detail', pk=post_pk)
+
+@login_required
+def create_blog(request):
+    pass
