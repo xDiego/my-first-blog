@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<h1>Blog Settings</h1>
+
+{% for blog in blogs %}
+    <p>Blog Name: <a href="{% url 'post_list1' pk=blog.pk %}">{{ blog.name }}</a></p>
+    <p>Blog Desc: {{ blog.description }}</p>
+    <p>num_posts: {{ blog.num_posts }}</p>
+    <a class="btn btn-default" href="{% url 'blog_edit' pk=blog.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+    <hr>
+{% endfor %}
+{% endblock %}

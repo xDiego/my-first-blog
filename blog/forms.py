@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import Post, Comment, UserProfile
+from .models import Post, Comment, UserProfile, Blog
 from django.utils.translation import ugettext_lazy as _ 
 from django.contrib.auth.models import User
 
@@ -44,3 +44,8 @@ class UserSettingsForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'last_login', 'date_joined')
+
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = ('name', 'description')

@@ -4,11 +4,13 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
 from .models import Post, Comment, UserProfile, Blog
-from .forms import PostForm, CommentForm, RegisterForm, UserSettingsForm
+from .forms import PostForm, CommentForm, RegisterForm, UserSettingsForm, BlogForm
+from .signals import update_num_post
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django import forms
+from django.dispatch import Signal
 
 # Create your views here.
 def main_page(request):
@@ -43,12 +45,36 @@ def settings_page(request):
 
     return redirect('django.contrib.auth.views.login')
 
+@login_required
+def blog_settings(request):
+    """Choose a blog and change it's settings
+    E.G:
+        - Change blog name
+        - Description
+        - Manage Posts/Comments
+        - ....
+    """
+    blog_list = Blog.objects.filter(owner__user=request.user)
+    return render(request, 'blog/blog_settings.html', {'blogs':blog_list})
+
+@login_required
+def blog_edit(request, pk):
+    blog = get_object_or_404(Blog, pk=pk)
+    if request.method == "POST":
+        form = BlogForm(request.POST, instance=blog)
+        if form.is_valid():
+            b = form.save()
+            return redirect('blog_settings')
+    else:
+        form = BlogForm()
+
+    return render(request, 'blog/blog_edit.html', {'form': form, 'blog':blog})
+
 def post_list1(request, pk):
 #    posts = Post.objects.filter(blog__pk=pk, author=request.user).order_by('-published_date')
     posts = Post.objects.filter(blog__pk=pk).order_by('-published_date')
-    print('post_list1')
-    print(posts)
-    return render(request, 'blog/post_list.html', {'posts':posts})
+
+    return render(request, 'blog/blog_post_list.html', {'posts':posts, 'pk':pk})
 
 def post_list(request):
     ## TODO:
@@ -73,6 +99,7 @@ def post_new(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+
             return redirect('post_detail', pk=post.pk)
     else:
         # Limit the Blog options to users blog
@@ -120,6 +147,10 @@ def post_remove(request, pk):
     """Remove a post
     """
     post = get_object_or_404(Post, pk=pk)
+    
+    if post.blog:
+        update_num_post.send(sender=None, blog=post.blog)
+
     post.delete()
     return redirect('blog.views.post_list')
 

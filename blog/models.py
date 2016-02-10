@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from .signals import update_num_post
 
 # Create your models here.
 class UserProfile(models.Model):
@@ -41,7 +42,7 @@ class Blog(models.Model):
     num_posts = models.IntegerField(default=0)
 
     def __str__(self):
-        return ''.join([self.name, '(', str(self.owner), ')'])
+        return ''.join([self.name, '(', str(self.owner), ')'])    
 
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
@@ -56,6 +57,8 @@ class Post(models.Model):
     def publish(self):
         self.published_date = timezone.now()
         self.save()
+        self.blog.num_posts += 1
+        self.blog.save()
 
     def approved_comments(self):
         return self.comments.filter(approved_comment=True)
@@ -82,3 +85,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+def handle_update_num_post(sender, **kwargs):
+    if kwargs:
+        blog = kwargs['blog']
+        blog.num_posts = blog.num_posts - 1
+        if blog.num_posts < 0:
+            blog.num_posts = 0
+        blog.save()
+
+update_num_post.connect(handle_update_num_post)
