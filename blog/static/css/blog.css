@@ -1,7 +1,18 @@
+
+
+
+
+
+
+
+
+
 .page-header {
-    background-color: #ff9400;
+    background-color: #0a0808;
     margin-top: 0;
-    padding: 20px 20px 20px 40px;
+    padding: 10px 10px 10px 20px;
+    position: fixed;
+    width:100%;
 }
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
@@ -45,6 +56,18 @@ h1,h2,h3,h4 {
     color: #000000;
 }
 
+.row {
+    margin-top: 100px;
+}
+
+.col-md-8 {
+    z-index:-1;
+}
+
 .comment {
     margin: 20px 0px 20px 20px;
+}
+
+.post-text {
+    font-size: 20px;
 }

@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^user_settings/$', views.settings_page, name='settings_page'),
     url(r'^blog_settings/$', views.blog_settings, name='blog_settings'),
     url(r'blog_settings/(?P<pk>[1-9]+)/$', views.blog_edit, name='blog_edit'),
+#    url(r'^user_profile_settings/$', views.user_profile_settings, name='user_profile_settings'),
 ]
 

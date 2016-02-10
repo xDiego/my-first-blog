@@ -46,6 +46,18 @@ def settings_page(request):
     return redirect('django.contrib.auth.views.login')
 
 @login_required
+def user_profile_settings(request):
+    # profile = UserProfile.objects.get(user=request.user)
+    # form = UserProfileSettingsForm(
+    #     initial={
+    #         'name':request.user.username,
+    #         'num_blogs':profile.num_blogs
+    #     }
+    # )
+    # return render(request, 'blog/user_profile_settings.html', {'form':form})
+    pass
+
+@login_required
 def blog_settings(request):
     """Choose a blog and change it's settings
     E.G:
