@@ -4,6 +4,7 @@
     padding: 10px 10px 10px 20px;
     position: fixed;
     width:100%;
+    z-index:2;
 }
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
@@ -51,9 +52,13 @@ h1,h2,h3,h4 {
     margin-top: 100px;
 }
 
+.col-md-8 col-md-offset-6 {
+   /* position:relative;*/
+}
+
 .col-md-8 {
-    position:relative;
- /*   z-index:-1;*/
+    /*position:absolute;*/
+    z-index:1;
 }
 
 .comment {
