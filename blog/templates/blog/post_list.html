@@ -1,7 +1,3 @@
-
-
-
-
 {% extends 'blog/base.html' %}
 
 {% block content %}
@@ -16,8 +12,9 @@
 	      <small><p>published: {{post.published_date}}</p></small>
 	    </div>
 	    <p class="post-text">{{post.text|linebreaks}}</p>
-        <p><a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-primary" role="button">Add Comment</a>
-	  <a href="{% url 'blog.views.post_detail' pk=post.pk%}" style="float:right;">Comments: {{ post.approved_comments.count }}</a>
+        <p>
+	  <!--<a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-primary" role="button">Add Comment</a> -->
+	  <div class="comment-count"><a href="{% url 'blog.views.post_detail' pk=post.pk%}" style="float:right;">Comments: {{ post.approved_comments.count }}</a></div>
 	</p>
       </div>
     </div>

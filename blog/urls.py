@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.main_page, name='main_page'),
     url(r'^blogs/(?P<pk>[1-9]+)/$', views.post_list1, name='post_list1'),
+    url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^post_list/', views.post_list, name='post_list'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
     url(r'^post/new/$', views.post_new, name='post_new'),

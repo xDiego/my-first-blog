@@ -13,6 +13,11 @@ class UserProfile(models.Model):
         settings.AUTH_USER_MODEL,
         related_name="profile"
     )
+    follows = models.ManyToManyField(
+        "self",
+        related_name ="followed_by",
+        symmetrical=False
+    )
 
     # Attributes - Mandatory
     num_blogs = models.IntegerField(default=0)

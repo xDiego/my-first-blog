@@ -82,6 +82,35 @@ def blog_edit(request, pk):
 
     return render(request, 'blog/blog_edit.html', {'form': form, 'blog':blog})
 
+def follow(request, pk):
+    """Follow a person
+    """
+    pass
+
+def follower_suggestion(user):
+    """Show suggestion for this user to follow
+    based on people you follow(e.g: people you follow that
+    may have same interest on you. Or purely based on users followed
+    by someone you follow.)
+    """
+    pass
+
+def dashboard(request):
+    """The main dashboard that shows the post from users
+    that user follows.    
+    """
+    ## Get follower posts
+    ## Limit number of posts by 50 posts
+    
+    ## Way 1
+    ## - get all followers from user
+    ## - get posts from each one
+    followers = request.user.profile.follows.all()
+    posts_list = {follower.user.post_set.all() for follower in followers}
+
+    return render(request, 'blog/dashboard.html', {'posts_list':posts_list})
+    
+
 def post_list1(request, pk):
 #    posts = Post.objects.filter(blog__pk=pk, author=request.user).order_by('-published_date')
     posts = Post.objects.filter(blog__pk=pk).order_by('-published_date')

@@ -27,7 +27,7 @@ SECRET_KEY = '%#2x!%0xtw3i(ytmexa6grj7t*m*9$h*7bx!#ts40w6wfu-4_b'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-LOGIN_REDIRECT_URL = '/post_list/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 
 # Application definition
 
