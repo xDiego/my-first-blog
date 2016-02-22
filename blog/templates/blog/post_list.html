@@ -1,9 +1,10 @@
-{% extends 'blog/base.html' %}
-
+{% extends 'blog/base3.html' %}
+<!-- TODO:
+     Check if we should print out the side panel -->
 {% block content %}
-
+<h1 style="margin-left:100px;margin-top:10px;text-align:center;">HOME</h1>
   {% for post in posts %}
-  <div class="col-md-8 col-md-offset-6">
+  <div class="col-md-6 col-md-offset-3">
     <div class="thumbnail">
       <div class="caption">
 	<h2><a href="{% url 'post_detail' pk=post.pk %}">{{post}}</a></h2>
@@ -14,7 +15,7 @@
 	    <p class="post-text">{{post.text|linebreaks}}</p>
         <p>
 	  <!--<a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-primary" role="button">Add Comment</a> -->
-	  <div class="comment-count"><a href="{% url 'blog.views.post_detail' pk=post.pk%}" style="float:right;">Comments: {{ post.approved_comments.count }}</a></div>
+	  <div class="comment-count"><a href="{% url 'blog.views.post_detail' pk=post.pk%}" style="float:right; position:relative;bottom:10px;">Comments: {{ post.approved_comments.count }}</a></div>
 	</p>
       </div>
     </div>

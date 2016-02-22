@@ -2,8 +2,7 @@
 
 {% block content %}
 
-{% for posts in posts_list  %}
-    {% for post in posts %}
+    {% for post in post_list %}
     <div class="col-md-8 col-md-offset-6">
       <div class="thumbnail">
        <div class="caption">
@@ -14,12 +13,10 @@
 	</div>
 	<p class="post-text">{{post.text|linebreaks}}</p>
         <p>
-	  <!--<a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-primary" role="button">Add Comment</a> -->
 	  <div class="comment-count"><a href="{% url 'blog.views.post_detail' pk=post.pk%}" style="float:right;">Comments: {{ post.approved_comments.count }}</a></div>
 	</p>
       </div>
     </div>
   </div>
   {% endfor %}
-{% endfor%}
 {% endblock%}

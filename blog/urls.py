@@ -16,9 +16,9 @@ urlpatterns = [
     url(r'^comment/(?P<pk>[0-9]+)/approve/$', views.comment_approve, name='comment_approve'),
     url(r'^comment/(?P<pk>[0-9]+)/remove/$', views.comment_remove, name='comment_remove'),
     url(r'^register/$', views.register, name='register'),
+    url(r'^settings/$', views.settings_page, name='settings_page'),
     url(r'^user_settings/$', views.settings_page, name='settings_page'),
     url(r'^blog_settings/$', views.blog_settings, name='blog_settings'),
     url(r'blog_settings/(?P<pk>[1-9]+)/$', views.blog_edit, name='blog_edit'),
-#    url(r'^user_profile_settings/$', views.user_profile_settings, name='user_profile_settings'),
+    url(r'^blog_settings/create_blog/$', views.create_blog, name='create_blog'),
 ]
-

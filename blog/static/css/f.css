@@ -1,0 +1,99 @@
+body{
+    margin-right:0;
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0 0 0 0;
+    background-color:white;
+    background-attachment: fixed;
+}
+
+.top-menu, .top-menu:hover, top-menu:visited {
+    color: #ffffff;
+    float: right;
+    font-size: 26 pt;
+    margin-right: 20px;
+}
+
+.wrapper{
+    margin:0 0 0 0;
+    padding: 0 0 0 0;
+    
+}
+
+.page-header {
+    width:100%;
+    height:70px;
+    background-color:#033E6B;
+    opacity:0.9;
+
+    /* positioning */
+    position:fixed;
+    top:0;
+    z-index:2;
+
+    /* margins and padding */
+    margin: 0;
+    padding: 0;
+}
+
+/*NOTE:
+  using width 100% will cause the page to expand if we move
+  (for example) the side nagivator to padding-left:100px;
+
+*/
+
+.container-wrapper{
+    position:absolute;
+    margin-top:70px;
+    margin-left:0;
+    margin-right:0;
+    margin-bottom:0;
+    width:100%;
+}
+
+.container {
+}
+
+.side-nav {
+    width: 20%;
+    height: 100%;
+    position:fixed;
+    background-color:#2659f2;
+    display:none;
+}
+
+.nav {
+    position:absolute;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align:center;
+}
+
+.nav li {
+    text-decoration:none;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.nav ul{
+    margin:0;
+    padding:0;
+    width:inherit;
+    text-decoration:none;
+    list-style-type:none;
+}
+
+.nav h1, h2, h3, h4, h5, h6 {
+    margin: auto;
+    padding:0;
+    color:white;
+}
+
+.nav a {
+    font-size:20px;
+    color:white;
+    padding:0;
+    text-decoration:none;
+}

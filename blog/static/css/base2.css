@@ -1,0 +1,202 @@
+.box {
+    width:90%;
+    height:250px;
+    background-color:whitesmoke;
+    margin-top:0px;
+    margin-bottom:10px;
+    padding-top:0;
+    padding-left:0;
+    padding-right:0;
+    padding-bottom:0px;
+    border-radius:3px 3px 0px 0px;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+body{
+    margin-right:0;
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0 0 0 0;
+    /*background-image: url("dark_embroidery/green_dust_scratch.png");*/
+    background-attachment: fixed;
+   /* background-image: url("dark_embroidery/tree_bark.png")*/
+}
+
+.top-menu, .top-menu:hover, top-menu:visited {
+    color: #ffffff;
+    float: right;
+    font-size: 26 pt;
+    margin-right: 5px;
+    padding-top:10px;
+}
+
+.wrapper{
+    margin:0 0 0 0;
+    padding: 0 0 0 0;
+    
+}
+
+.page-header {
+    width:85%; /* CHANGE to 85%*/
+    height:70px;
+    background-color:#033E6B;
+    opacity:0.9;
+
+
+    /* positioning */
+    position:fixed;
+    top:0;
+    z-index:2;
+    right:0;
+
+    /* margins and padding */
+    margin: inherit; /*override to margin-left:200px*/
+    padding: inherit;
+    border:0;
+}
+
+/*NOTE:
+  using width 100% will cause the page to expand if we move
+  (for example) the side nagivator to padding-left:100px;
+
+*/
+
+.container-wrapper{
+    position:absolute;
+    margin-top:70px;
+    margin-left:0;
+    margin-right:0;
+    margin-bottom:0;
+    width:100%;
+}
+
+.container {
+    width:85%;
+    margin-left:15%;
+    padding: 0;
+}
+
+.content {
+    position:relative;
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.side-nav {
+    width: 15%;
+    height: 100%;
+    position:fixed;
+    background-color: #232425;
+    top:0;
+}
+
+.collapse li {
+    text-decoration:none;
+    padding: 0;
+    margin: 0;y    
+}
+
+.nav {
+    position:absolute;
+    width: 200px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-li {
+    text-decoration:none;
+    padding: 0;
+    margin: 0;
+    border-bottom-style: solid;
+    border-bottom-color: #0D0F11;
+    border-top-style: solid;
+}
+
+.nav a:hover {
+   /* background-color:#001C30; */
+/*    font-size: 20px; */
+    color: #0071C7;
+}
+
+
+
+.nav ul{
+    margin:0;
+    padding:0;
+    width:inherit;
+    text-decoration:none;
+    list-style-type:none;
+}
+
+.nav h1, h2, h3, h4, h5, h6 {
+    margin: auto;
+    padding:0;
+    color:white;
+}
+
+.nav a {
+    font-size:15px;
+    color:white;
+    padding:0;
+    text-decoration:none;
+    line-height:40px;
+    display: table-cell;
+    width: 200px;
+    padding-left: 10px;
+    border-color:none;
+    cursor:pointer;
+}
+
+.glyphicon {
+    padding-right:10px;
+}
+
+.glyphicon-book{
+    top:10px;
+}
+
+.left-boxes {
+    float: left;
+    position:fixed;
+    margin: 0;
+    margin-top:5px;
+    padding:0;
+    display:none;
+}
+
+.left-boxes a{
+    position:relative;
+    font-size:18px;
+    left:40%;
+    top:30%;
+    display:none;
+}
+
+.center-boxes {
+    position:absolute;
+    left:25%;
+    margin-top:5px;
+    margin-left:20px;
+    margin-right:20px;
+}
+
+.box-header {
+    width:100%;
+    height:30px;
+    color:black;
+}
+
+.thumbnail-content {
+    padding: 10px 10px 10px 10px;
+    word-wrap: break-word;
+}
+
+.right-boxes {
+    position:absolute;
+    right:0px;
+    margin-top: 5px;
+    margin-left:20px;
+    margin-right:20px;
+    display:none;
+}

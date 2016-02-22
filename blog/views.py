@@ -1,5 +1,6 @@
 import hashlib
 import random
+import itertools
 from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
@@ -12,6 +13,10 @@ from django.contrib.auth import login, authenticate
 from django import forms
 from django.dispatch import Signal
 
+## Cache
+blog_nav_cache = None
+
+
 # Create your views here.
 def main_page(request):
     return render(request, 'blog/index.html')
@@ -20,7 +25,6 @@ def main_page(request):
 def settings_page(request):
     # check if user is authenticated
     if request.user.is_authenticated() and request.method == "GET":
-        print('user authenticated')
         # Query DB for UserProfile settings
 #        user = User.objects.filter(username=request.user)[0]
         user = request.user  ## this is a replacement for the above code
@@ -34,7 +38,11 @@ def settings_page(request):
                 'date_joined':user.date_joined
             }
         )
-        return render(request, 'blog/user_settings.html', {'form':form})
+
+        ## blog settings
+        blog_list = Blog.objects.filter(owner__user=request.user)
+        
+        return render(request, 'blog/user_settings.html', {'form':form, 'blog_list':blog_list})
 
     elif request.method == "POST": #POST method
         form = UserSettingsForm(request.POST, instance=request.user)
@@ -106,26 +114,36 @@ def dashboard(request):
     ## - get all followers from user
     ## - get posts from each one
     followers = request.user.profile.follows.all()
-    posts_list = {follower.user.post_set.all() for follower in followers}
+    posts_list = [follower.user.post_set.all() for follower in followers]
+    all_posts = list(itertools.chain(*posts_list))
+    sorted_posts = sorted(all_posts, key=lambda x: x.published_date, reverse=True)
 
-    return render(request, 'blog/dashboard.html', {'posts_list':posts_list})
-    
+    return render(request, 'blog/dashboard.html', {'post_list':sorted_posts})
 
 def post_list1(request, pk):
-#    posts = Post.objects.filter(blog__pk=pk, author=request.user).order_by('-published_date')
-    posts = Post.objects.filter(blog__pk=pk).order_by('-published_date')
+    """Queries the DB for all the posts that match PK
+    TODO: make sure it belongs to request.user????
 
-    return render(request, 'blog/blog_post_list.html', {'posts':posts, 'pk':pk})
+    TODO: check if the blog belongs to request.user, if so then show
+    the side control panel, otherwise don't.
+
+    """
+    global blog_nav_cache
+    posts = Post.objects.filter(blog__pk=pk).order_by('-published_date')
+    blogs = Blog.objects.filter(owner__user=request.user)
+    return render(request, 'blog/post_list.html', {'posts':posts, 'pk':pk, 'blogs':blogs})
 
 def post_list(request):
+    """Queries the DB for all the posts that match request.user
+    """
     ## TODO:
     ## Figure out how to print Posts for the Blog selected
     ## and not all the Post from every blog
 
     ## query db for users post only
     posts = Post.objects.filter(author=request.user).order_by('-published_date')
-
-    return render(request, 'blog/post_list.html', {'posts':posts})
+    blogs = Blog.objects.filter(owner__user=request.user)
+    return render(request, 'blog/post_list.html', {'posts':posts, 'blogs':blogs})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -302,4 +320,23 @@ def comment_remove(request, pk):
 
 @login_required
 def create_blog(request):
-    pass
+    """Handles the creation of a blog
+    """
+
+    if request.method == "POST":
+        form = BlogForm(request.POST)
+        
+        if form.is_valid():
+            new_blog = Blog.objects.create(
+                owner=request.user.profile,
+                name=form.cleaned_data.get('name'),
+                description=form.cleaned_data.get('description')
+            )
+            new_blog.save()
+
+            return redirect('blog.views.blog_settings')
+    else:
+        form = BlogForm()
+
+    blogs = Blog.objects.filter(owner__user=request.user)
+    return render(request, 'blog/create_blog.html', {'form':form, 'blogs':blogs})

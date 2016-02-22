@@ -1,0 +1,94 @@
+{% load staticfiles %}
+<html style="min-width:550px; position:relative;height:100%;">
+  <head>
+    <title>site</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/f.css' %}">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+  </head>
+
+  <body>
+
+    <!-- Main Box -->
+    <div class="wrapper">
+
+      <!-- Contains items and the navigator on the page header -->
+      <div class="page-header" style="margin:0; padding:0;">
+	
+	<!-- main navitgator -->
+	<div class="navigator-wrapper">
+	      {% if user.is_authenticated %}
+	      <a class="top-menu" href="{% url 'settings_page' %}"><span class="glyphicon glyphicon-cog"></span></a>
+	      <a href="{% url 'post_new' %}" class="top-menu" data-toggle="tooltip" title="New Post"><span class="glyphicon glyphicon-file"></span></a>
+	      <a href="{% url 'post_draft_list' %}" class="top-menu" data-toggle="tooltip" title="Drafts"><span class="glyphicon glyphicon-edit"></span></a>
+	      <a href="{% url 'dashboard' %}" class="top-menu" data-toggle="tooltip" title="Dashboard:View posts from people you follow"><span class="glyphicon glyphicon-user"></span></a>
+	      <a href="{% url 'post_list'%}" class="top-menu" data-toggle="tooltip" title="Home"><span class="glyphicon glyphicon-home"></span></a>
+	      <p class="top-menu"><strong>Hello {{ user.username }}</strong><small>(<a href="{% url 'django.contrib.auth.views.logout' %}" data-toggle="tooltip" title="logout">Log out</a>)</small></p>
+	      {% else %}
+	      <a href="{% url 'django.contrib.auth.views.login' %}" style="float: right; margin-right:10px; color:white;"><h3>Login</h3></a>
+	      <a href="{% url 'register' %}" style="float: right; margin-right:10px; color:white;"><h3>SignUp!</h3></a>
+	      {% endif %}
+	      <h1 style="
+			 padding-left: 30px;
+			 /* position: relative; */
+			 /* top: 0px; */
+			 text-shadow: 2px 2px 3px #095D9D;
+			 font-size: 50px;
+			 position: relative;
+			 top: 0;
+			 color: white;
+			 margin: 0;
+			 ">Blogger</h1>
+	</div>
+
+      </div><!-- end page-header -->
+
+      <!-- Contains the content of the site -->
+      <div class="container-wrapper">
+
+	<!-- OPTIONAL: side navigator -->
+	<div class="side-nav">
+	  <div class="nav">
+	    <h1>Options </h1>
+	    <ul>
+	    <li><a href="">Option 1</a></li>
+	    <li><a href="">Option 2</a></li>
+	    <li><a href="">Option 3</a></li>
+	    <li><a href="">Option 4</a></li>
+	    <li><a href="">Option 5</a></li>
+	    <li><a href="">Option 6</a></li>
+	    </ul>
+	    <hr />
+	    <ul>
+	    <li><a href="">Option 7</a></li>
+	    <li><a href="">Option 8</a></li>
+	    <li><a href="">Option 9</a></li>
+	    <li><a href="">Option 10</a></li>
+	    <li><a href="">Option 11</a></li>
+	    <li><a href="">Option 12</a></li>
+	    </ul>
+	    <hr />
+	  </div>
+	</div><!-- end sive-nav -->
+
+	<!-- Contains the main content-->
+	<div class="container">
+	  <div class="row">
+	    <div class="col-md-8">
+	      {% block content %}
+	      {% endblock %}
+	    </div>
+	  </div>
+	</div> <!-- end content -->
+	
+
+      </div><!-- end container-wrapper-->
+
+    </div> <!-- end wrapper -->
+
+
+  </body>
+</html>

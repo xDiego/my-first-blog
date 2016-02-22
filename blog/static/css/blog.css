@@ -1,24 +1,35 @@
+
+
+
+
+
+
 .page-header {
-    background-color: #0a0808;
+    background-color: #033E6B;
     margin-top: 0;
     padding: 10px 10px 10px 20px;
     position: fixed;
     width:100%;
     z-index:2;
+    height:70px;
+    opacity:0.9;
 }
 
-.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
-    color: #ffffff;
+.page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
+    color: white;
     font-size: 36px;
     text-decoration: none;
 }
 
-.content {
-    margin-left: 20px;
+.page-header h1 {
+    color:white;
+    text-shadow: 2px 2px 3 px #095D9D;
+    font-size:40px;
+
 }
 
-h1,h2,h3,h4 {
-    font-family: 'Lobster', cursive;
+.content {
+    margin-left: 20px;
 }
 
 .date {
@@ -31,6 +42,18 @@ h1,h2,h3,h4 {
 
 .post-form textarea, .post-form input {
     width: 100%;
+}
+
+.cont {
+    position:fixed;
+}
+
+.nav-cont{
+    position:absolute;
+}
+
+.nav-cont a{
+    position:relative;
 }
 
 .top-menu, .top-menu:hover, top-menu:visited {
@@ -67,8 +90,13 @@ h1,h2,h3,h4 {
 
 .comment-count {
     padding: 5px 5px 5px 5px;
+    bottom:5px;
 }
 
 .post-text {
     font-size: 20px;
+}
+
+.btn-default {
+    background-color:#6595BC;
 }
