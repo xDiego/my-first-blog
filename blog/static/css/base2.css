@@ -148,12 +148,37 @@ body{
     cursor:pointer;
 }
 
+.nav-li-header {
+    background-color:#090A0B;
+    color:white;
+    border-bottom-style:solid;
+    border-top-style:solid;
+    padding-left:10px;
+    
+}
+
+.nav-li-header p {
+    font-size: 15px;
+}
+
 .glyphicon {
     padding-right:10px;
 }
 
 .glyphicon-book{
     top:10px;
+}
+
+.form-search{
+    float:left;
+    position:relative;
+    top:20px;
+    left:11%;
+    width:50%;
+}
+
+.form-search input {
+    width:78%;
 }
 
 .left-boxes {

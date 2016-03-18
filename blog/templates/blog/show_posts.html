@@ -1,0 +1,21 @@
+{% extends 'blog/base3.html'%}
+
+{% block content %}
+
+<!-- Grab a title of the page and posts-->
+
+<div class="row">
+  <div class="content-title-title">{{title}}</div>
+  <div class="content-body">
+
+    <!--print the posts here-->
+    {% for post in post_list %}
+        
+    {% endfor %}
+
+  </div>
+
+</div>
+
+
+{% endblock %}

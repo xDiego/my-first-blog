@@ -22,13 +22,20 @@ class UserProfile(models.Model):
     # Attributes - Mandatory
     num_blogs = models.IntegerField(default=0)
     activation_key = models.CharField(max_length=40, default="empty")
-    key_expires = models.DateTimeField(null=True)    
+    key_expires = models.DateTimeField(null=True)
+    main_blog = models.CharField(max_length=120,default="")
 
     # Custom Property
     def username(self):
         return self.user.username
 
     # Methods
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('blog.views.show_profile', kwargs={'pk':int(self.user.pk)})
+
+    def get_main_blog(self):
+        return self.blog_set.get(name=self.main_blog)
 
     def __str__(self):
         return self.user.username

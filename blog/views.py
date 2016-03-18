@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
 from .models import Post, Comment, UserProfile, Blog
-from .forms import PostForm, CommentForm, RegisterForm, UserSettingsForm, BlogForm
+from .forms import PostForm, CommentForm, RegisterForm, UserSettingsForm, BlogForm, UserProfileSettingsForm, formFactory
 from .signals import update_num_post
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -13,7 +13,7 @@ from django.contrib.auth import login, authenticate
 from django import forms
 from django.dispatch import Signal
 
-## Cache
+## Caches
 blog_nav_cache = None
 
 
@@ -23,38 +23,53 @@ def main_page(request):
 
 @login_required
 def settings_page(request):
+    """Unifies all the settings views into one main "settings" view.
+    At the moment settings_page is doing all the work but we should
+    create the different views and just call them inside here.
+
+    TODO:  Implement each individual settings view and call them
+    here.
+
+    """
+    global blog_nav_cache
+    ## blog settings
+    if not blog_nav_cache:
+        blog_nav_cache = Blog.objects.filter(owner__user=request.user)
+
     # check if user is authenticated
     if request.user.is_authenticated() and request.method == "GET":
         # Query DB for UserProfile settings
-#        user = User.objects.filter(username=request.user)[0]
         user = request.user  ## this is a replacement for the above code
                              ## don't have to fetch user from DB
         form = UserSettingsForm(
             initial={
                 'first_name':user.first_name,
                 'last_name':user.last_name,
-                'email':user.email,
-                'last_login':user.last_login,
-                'date_joined':user.date_joined
+                'email':user.email
             }
         )
+        form2 = UserProfileSettingsForm(blog_list)
 
-        ## blog settings
-        blog_list = Blog.objects.filter(owner__user=request.user)
-        
-        return render(request, 'blog/user_settings.html', {'form':form, 'blog_list':blog_list})
+        return render(request, 'blog/user_settings.html', {'form':form, 'blogs':blog_nav_cache, 'form2':form2})
 
     elif request.method == "POST": #POST method
-        form = UserSettingsForm(request.POST, instance=request.user)
+        f = formFactory(request.POST['form_type'])
+        print(request.POST)
+        ## TODO Edit this line below
+        ## Figure out which instance to send
+        form = f(blog_list,request.POST,instance=request.user.profile)
         if form.is_valid():
+            print('form is valid')
             form.save()  #update user profile
  
-            return render(request, 'blog/user_settings.html', {'form':form}) 
+            return render(request, 'blog/user_settings.html', {'form':form, 'blogs':blog_nav_cache}) 
 
     return redirect('django.contrib.auth.views.login')
 
 @login_required
 def user_profile_settings(request):
+    """
+    """
     # profile = UserProfile.objects.get(user=request.user)
     # form = UserProfileSettingsForm(
     #     initial={
@@ -129,9 +144,20 @@ def post_list1(request, pk):
 
     """
     global blog_nav_cache
-    posts = Post.objects.filter(blog__pk=pk).order_by('-published_date')
-    blogs = Blog.objects.filter(owner__user=request.user)
-    return render(request, 'blog/post_list.html', {'posts':posts, 'pk':pk, 'blogs':blogs})
+
+    blog = get_object_or_404(Blog, pk=pk)
+    posts = blog.post_set.all()
+    current_page = blog.name
+
+    ## Check cache
+    if not blog_nav_cache:
+        blog_nav_cache = Blog.objects.filter(owner__user=request.user)
+
+    ## TODO:
+    ## check cache of the people user is following
+    following = request.user.profile.follows.all()
+
+    return render(request, 'blog/post_list.html', {'posts':posts, 'pk':pk, 'blogs':blog_nav_cache, 'following':following, 'current_page': current_page})
 
 def post_list(request):
     """Queries the DB for all the posts that match request.user
@@ -143,7 +169,8 @@ def post_list(request):
     ## query db for users post only
     posts = Post.objects.filter(author=request.user).order_by('-published_date')
     blogs = Blog.objects.filter(owner__user=request.user)
-    return render(request, 'blog/post_list.html', {'posts':posts, 'blogs':blogs})
+    following = request.user.profile.follows.all()
+    return render(request, 'blog/post_list.html', {'posts':posts, 'blogs':blogs, 'following':following, 'current_page':'Home'})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -340,3 +367,17 @@ def create_blog(request):
 
     blogs = Blog.objects.filter(owner__user=request.user)
     return render(request, 'blog/create_blog.html', {'form':form, 'blogs':blogs})
+
+@login_required
+def show_profile(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    try:
+        blog = Blog.objects.get(name=user.profile.main_blog)
+    except:
+        ## If person being followed doesn't have a main blog
+        ## or doesn't have one.
+        return render(request, 'blog/dashboard.html', {'blog_title':None, 'post_list':None})
+
+    ## Grab posts from the main blog
+    posts = blog.post_set.all()
+    return render(request, 'blog/dashboard.html', {'blog_title':user.profile.main_blog, 'post_list':posts})

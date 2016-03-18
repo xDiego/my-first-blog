@@ -21,6 +21,17 @@
       <!-- Contains items and the navigator on the page header -->
       <div class="page-header">
 	{% if user.is_authenticated %}
+
+	<!-- Search box-->
+	<div class="form-search">
+	  <form action="action_page.php">
+	    <input type="search" name="blogger_search" placeholder="Search for..">
+	      <button type="submit" class="btn btn-default btn-sm">
+		<span class="glyphicon glyphicon-search"></span><strong>Search</strong> 
+	      </button>
+
+	  </form>
+	</div>
     <a class="top-menu" href="{% url 'settings_page' %}"><span class="glyphicon glyphicon-cog"></span></a>
     <a href="{% url 'post_new' %}" class="top-menu" data-toggle="tooltip" title="New Post"><span class="glyphicon glyphicon-file"></span></a>
     <a href="{% url 'post_draft_list' %}" class="top-menu" data-toggle="tooltip" title="Drafts"><span class="glyphicon glyphicon-edit"></span></a>
@@ -77,6 +88,16 @@
 		  <a href="{% url 'blog.views.create_blog'%}" class="sub-menu-inner-inner" style="background-color:#000F1A;"><span class="glyphicon glyphicon-plus"></span>Create Blog</a>
 		</li>
 	      </div>
+	      <li class="nav-li-header">
+		<p>People Following</p>
+		<ul>
+		  {% for person in following %}
+		  <!-- Fix href, there is a problem with show_profile view -->
+		  <li><a href="{{ person.get_absolute_url }}">{{person.username}}</a></li>
+		  {% endfor %}
+		</ul>
+	      </li>
+	      
 	    </ul>
 	  </div>
 	</div><!-- end sive-nav -->

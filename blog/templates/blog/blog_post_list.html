@@ -1,12 +1,13 @@
-{% extends 'blog/base.html' %}
+{% extends 'blog/base3.html' %}
 
 {% block content %}
   {% for post in posts %}
+<h1 style="margin-left:105px;margin-top:10px;">{{ post.blog }}</h1>
           <div class="post">  
 	    <h1><a href="{% url 'post_detail' pk=post.pk %}">{{post}}</a></h1>
 	    <p>By {{ post.author }}</p>
 	    <div class="date">
-	      <p>published: {{post.published_date}}</p>
+	      <p>published: {{post.published_date|timesince}}</p>
 	    </div>
 	    <p>{{post.text|linebreaks}}</p>
 	    <a href="{% url 'blog.views.post_detail' pk=post.pk%}">Comments: {{ post.approved_comments.count }}</a>

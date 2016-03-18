@@ -2,15 +2,15 @@
 <!-- TODO:
      Check if we should print out the side panel -->
 {% block content %}
-<h1 style="margin-left:100px;margin-top:10px;text-align:center;">HOME</h1>
+<h1 style="margin-left:105px;margin-top:10px;">{{ current_page }}</h1>
   {% for post in posts %}
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-6 col-md-offset-1">
     <div class="thumbnail">
       <div class="caption">
 	<h2><a href="{% url 'post_detail' pk=post.pk %}">{{post}}</a></h2>
 	    <h6>By {{ post.author }}</h6>
 	    <div class="date">
-	      <small><p>published: {{post.published_date}}</p></small>
+	      <small><p>published: {{post.published_date|timesince}} ago.</p></small>
 	    </div>
 	    <p class="post-text">{{post.text|linebreaks}}</p>
         <p>

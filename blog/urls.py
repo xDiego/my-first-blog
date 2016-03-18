@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^blog_settings/$', views.blog_settings, name='blog_settings'),
     url(r'blog_settings/(?P<pk>[1-9]+)/$', views.blog_edit, name='blog_edit'),
     url(r'^blog_settings/create_blog/$', views.create_blog, name='create_blog'),
+    url(r'^user/(?P<pk>[1-9]+)/$', views.show_profile, name='show_profile'),
 ]

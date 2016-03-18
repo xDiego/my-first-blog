@@ -1,9 +1,9 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-
+    <h1 style="text-align:center;margin-top:10px;margin-bottom:20px;">Dashboard</h1>
     {% for post in post_list %}
-    <div class="col-md-8 col-md-offset-6">
+    <div class="col-md-8 col-md-offset-2">
       <div class="thumbnail">
        <div class="caption">
  	<h2><a href="{% url 'post_detail' pk=post.pk %}">{{post}}</a></h2>

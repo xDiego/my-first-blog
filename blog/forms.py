@@ -43,10 +43,31 @@ class RegisterForm(forms.Form):
 class UserSettingsForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'last_login', 'date_joined')
+        fields = ('first_name', 'last_name', 'email')
+
+class UserProfileSettingsForm(forms.ModelForm):
+    def __init__(self,qset,*args,**kwargs):
+        print('qset=', qset)
+        super(UserProfileSettingsForm, self).__init__(*args, **kwargs)
+        if qset:
+            self.fields['main_blog'] = forms.ModelChoiceField(queryset=qset, empty_label='choose a main blog')
+
+    class Meta:
+        model = UserProfile
+        fields = ('main_blog',)
 
 class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
         fields = ('name', 'description')
 
+
+def formFactory(form_name):
+    """Returns a form objects based on the
+    given string. If form_name doesn't match
+    any existing form, then None is returned.
+    """
+    try:
+        return globals()[form_name]
+    except KeyError:
+        return None

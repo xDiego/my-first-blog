@@ -2,10 +2,45 @@
 
 {% block content %}
 
-<h1>User Settings</h1>
+<!-- <h1>User Settings</h1>
 <form method="POST" class="form-post">
 {% csrf_token%}
-{{ form.as_p }}
-<button type="submit" class="save btn btn-default">Save</button>
+<div class="row">
+  {{ form.as_p }}
+  <button type="submit" class="save btn btn-default">Save</button>
+</div>
+</form>
+<form method="POST" class="form-post">{% csrf_token%}
+  <div class="form-group row">
+    <!--    {% for field in form %}
+    <label for="field.label" class="col-sm-1 form-control-label"> {{field.label }}</label>
+    <div class="col-sm-4">
+      <input type="{" class="form-control" id="{{form.email.label}}" placeholder="Email">
+    </div>
+    
+    {% endfor %} 
+    <label for="{{form.email.label}}" class="col-sm-1 form-control-label">Email</label>
+    <div class="col-sm-4">
+      <input type="email" class="form-control" id="{{form.email.label}}" placeholder="Email">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputPassword3" class="col-sm-1 form-control-label">Password</label>
+    <div class="col-sm-4">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-secondary">Save</button>
+    </div>
+  </div>
+</form>
+-->
+<form method="POST">
+<h1>UserProfileSettings</h1>
+{% csrf_token %}
+{{ form2.as_p }}
+<button type="submit" name="form_type" value="UserProfileSettingsForm">Save</button>
 </form>
 {% endblock %}
